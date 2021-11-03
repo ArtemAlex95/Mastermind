@@ -36,52 +36,47 @@ class Mastermind
   end
 
   def valid_move?(input)
-    arr = []
-    input.each do |i|
-      if i.between?('1', '6')
-        arr.push(i)
-        if arr.count == 4
-          return true
-        else
-          puts 'Please, enter 4 numbers between 1-6'
-          return false
-        end
+    if input.join.match(/^[1-6]{4}$/)
+      true
+    else
+      puts 'Please, enter a four-digit code from 1 to 6'
+      false
+    end
+  end
+
+  def compare(guess, answer)
+    @score = []
+    wrong_guess_pegs, wrong_answer_pegs = [], []
+    peg_pairs = guess.zip(answer)
+
+    peg_pairs.each do |guess_peg, answer_peg|
+      if guess_peg == answer_peg
+        @score << "\u25CF"
       else
-        puts 'Please, enter 4 numbers between 1-6'
-        return false
+        wrong_guess_pegs << guess_peg
+        wrong_answer_pegs << answer_peg
       end
     end
-  end
-
-  def near_match?(choice)
-    @answer.include?(choice)
-  end
-
-  def exact_match?(choice, position)
-    choice == @answer[position]
-  end
-
-  def compare(guess)
-    result = { exact: [], near: [] }
-    guess.each_with_index do |char, index|
-      if exact_match?(char, index)
-        result[:exact] << "\u25CF"
-      elsif near_match?(char)
-        result[:exact] << "\u25CB"
+    wrong_guess_pegs.each do |peg|
+      if wrong_answer_pegs.include?(peg)
+        wrong_answer_pegs.delete(peg)
+        @score << "\u25CB"
       end
     end
+    @score
   end
 
   def won?
-    result[:exact].count == 4
+    @score.map { |i| i == "\u25CF" } == [true, true, true, true]
   end
 
   def guess
-    puts 'Please, enter 4 numbers between 1-6'
+    puts "\nPlease, enter 4 numbers between 1-6"
     user_input = gets.chomp.chars
     if valid_move?(user_input)
-      compare(user_input)
+      compare(user_input, @answer)
       @guesses += 1
+      puts "Guess: #{user_input.join(', ')}; Clues: #{@score.join(' ')}"
     else
       guess
     end
@@ -90,16 +85,15 @@ class Mastermind
   def play
     display_instruction
     while @guesses < 13
+      puts "\nThis is guess ##{@guesses + 1} out of 12"
       guess
       if won?
-        puts 'Congrats! You broke the code!'
+        puts "\nCongrats! You broke the code!"
         break
-      else
-        puts 'Bad luck :( One more?'
-        one_more?
       end
-      one_more?
     end
+    puts "\nOne more?"
+    one_more?
   end
 
   def one_more?
