@@ -105,4 +105,4 @@ class Mastermind
   end
 end
 
-test = Mastermind.new.play
+Mastermind.new.play
