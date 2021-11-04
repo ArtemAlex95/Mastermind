@@ -40,6 +40,7 @@ class Mastermind
       true
     else
       puts 'Please, enter a four-digit code from 1 to 6'
+      @guesses -= 1
       false
     end
   end
@@ -59,7 +60,6 @@ class Mastermind
     end
     wrong_guess_pegs.each do |peg|
       if wrong_answer_pegs.include?(peg)
-        wrong_answer_pegs.delete(peg)
         @score << "\u25CB"
       end
     end
@@ -76,7 +76,7 @@ class Mastermind
     if valid_move?(user_input)
       compare(user_input, @answer)
       @guesses += 1
-      puts "Guess: #{user_input.join(', ')}; Clues: #{@score.join(' ')}"
+      puts "\nGuess: #{user_input.join(', ')}; Clues: #{@score.join(' ')}"
     else
       guess
     end
@@ -84,15 +84,17 @@ class Mastermind
 
   def play
     display_instruction
-    while @guesses < 13
+    while @guesses < 12
       puts "\nThis is guess ##{@guesses + 1} out of 12"
       guess
       if won?
         puts "\nCongrats! You broke the code!"
         break
+      elsif @guesses == 12
+        puts "\nBad luck :( It was a hard code!"
+        break
       end
     end
-    puts "\nOne more?"
     one_more?
   end
 
