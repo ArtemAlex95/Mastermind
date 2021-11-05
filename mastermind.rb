@@ -15,6 +15,29 @@ class Mastermind
     @guesses = 0
   end
 
+  def choice
+    puts "\nDo you want to be a code-maker(1) or a code-breaker(2)?"
+    user_input = gets.chomp
+    if user_input == '1'
+      self.code_maker
+    elsif user_input == '2'
+      self.play
+    else
+      puts 'Please, choose your role 1-2'
+      choice
+    end
+  end
+
+  def code_maker
+    puts "\nPlease, guess your code (four-digit from 1 to 6)\n"
+    @answer = gets.chomp
+    if @answer.match(/^[1-6]{4}$/)
+      puts "\nYour code: #{@answer}"
+    else
+      code_maker
+    end
+  end
+
   def display_instruction
     puts "This is a 1-player game against the computer. You\'re a code-breaker.
 
@@ -114,4 +137,4 @@ class Mastermind
   end
 end
 
-Mastermind.new.play
+Mastermind.new.choice
