@@ -2,19 +2,26 @@
 
 class Mastermind
   def initialize
-    pattern = proc { '123456'.chars.sample }
-    @answer = 4.times.map(&pattern)
+    @code_colors = {
+      '1' => "\e[101m  1  \e[0m ",
+      '2' => "\e[43m  2  \e[0m ",
+      '3' => "\e[44m  3  \e[0m ",
+      '4' => "\e[45m  4  \e[0m ",
+      '5' => "\e[46m  5  \e[0m ",
+      '6' => "\e[41m  6  \e[0m ",
+    }
+    @answer = @code_colors.keys.sample(4)
     @guesses = 0
   end
 
   def display_instruction
     puts "This is a 1-player game against the computer. You\'re a code-breaker.
 
-    There are six different numbers: 1, 2, 3, 4, 5, 6.
+    There are six different numbers: #{@code_colors['1']}, #{@code_colors['2']}, #{@code_colors['3']}, #{@code_colors['4']}, #{@code_colors['5']}, #{@code_colors['6']}.
 
     The code maker will choose four to create a 'master code'. For example,
 
-    1231
+    #{@code_colors['1']}#{@code_colors['2']}#{@code_colors['3']}#{@code_colors['1']}
 
     As you can see, there can be more then one of the same number.
 
@@ -26,9 +33,10 @@ class Mastermind
 
     \u25CB - this clue means you have 1 correct number, but in the wrong location.
 
-    To continue the example, using the above 'master code' a guess of '1342' would produce 2 clues:
+    To continue the example, using the above 'master code' a guess of
+    #{@code_colors['1']}#{@code_colors['3']}#{@code_colors['4']}#{@code_colors['2']} would produce 2 clues:
 
-    Guess: 1342 Clues: \u25CF \u25CB
+    Guess: #{@code_colors['1']}#{@code_colors['3']}#{@code_colors['4']}#{@code_colors['2']} Clues: \u25CF \u25CB
 
     The guess had 1 correct number in the correct location and 1 correct numbers in a wrong location.
 
@@ -76,7 +84,7 @@ class Mastermind
     if valid_move?(user_input)
       compare(user_input, @answer)
       @guesses += 1
-      puts "\nGuess: #{user_input.join(', ')}; Clues: #{@score.join(' ')}"
+      puts "\nGuess: #{@code_colors[user_input[0]]}#{@code_colors[user_input[1]]}#{@code_colors[user_input[2]]}#{@code_colors[user_input[3]]}; Clues: #{@score.join(' ')}"
     else
       guess
     end
@@ -91,7 +99,7 @@ class Mastermind
         puts "\nCongrats! You broke the code!"
         break
       elsif @guesses == 12
-        puts "\nBad luck :( It was a hard code!"
+        puts "\nBad luck :( It was a hard code! #{@code_colors[@answer[0]]}#{@code_colors[@answer[1]]}#{@code_colors[@answer[2]]}#{@code_colors[@answer[3]]}"
         break
       end
     end
