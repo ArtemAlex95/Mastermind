@@ -10,7 +10,8 @@ class Mastermind
       '5' => "\e[46m  5  \e[0m ",
       '6' => "\e[41m  6  \e[0m ",
     }
-    @answer = @code_colors.keys.sample(4)
+    @pattern = proc { @code_colors.keys.sample }
+    @answer = 4.times.map(&@pattern)
     @guesses = 0
   end
 
