@@ -18,9 +18,10 @@ class Mastermind
   def choice
     puts "\nDo you want to be a code-maker(1) or a code-breaker(2)?"
     user_input = gets.chomp
-    if user_input == '1'
+    case user_input
+    when '1'
       self.code_maker
-    elsif user_input == '2'
+    when '2'
       self.play
     else
       puts 'Please, choose your role 1-2'
